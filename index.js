@@ -28,10 +28,31 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    const usersCollection = client.db("summerCamp").collection("users");
     const allClassesCollection = client.db("summerCamp").collection("allClasses");
     const instractorsCollection = client.db("summerCamp").collection("instractors");
     const classesCollection = client.db("summerCamp").collection("classes");
 
+    // usersCollection 
+    app.get('/users',  async(req, res) =>{
+      const result = await usersCollection.find().toArray();
+      res.send(result);
+  })
+
+
+    app.post('/users', async(req, res) =>{
+      const user = req.body;
+      console.log(user);
+      const query = {email: user?.email};
+      const existingUser = await usersCollection.findOne(query);
+      console.log('existingUser', existingUser)
+      if(existingUser){
+        return res.send({message: 'user already exist'})
+      }
+
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    })
 
     // instractors collection
     app.get('/instractors',  async(req, res) =>{

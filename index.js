@@ -55,6 +55,7 @@ async function run() {
     const allClassesCollection = client.db("summerCamp").collection("allClasses");
     const instractorsCollection = client.db("summerCamp").collection("instractors");
     const classesCollection = client.db("summerCamp").collection("classes");
+    const paymentsCollection = client.db("summerCamp").collection("payments");
 
     // jwt 
     app.post('/jwt', async (req, res) => {
@@ -110,6 +111,18 @@ async function run() {
       const result = { admin: user?.role === 'admin' };
       res.send(result);
     })
+
+    // payments api
+    app.post('/payments', verifyJWT, async (req, res) =>{
+      const payment =res.body;
+      const insertResult = await paymentsCollection.insertOne(payment);
+
+      const query = {_id: {$in: payment.classesItem.map(id => new ObjectId(id))}}
+      const deleteResult = await classesCollection.deleteMany(query);
+
+      res.send({insertResult, deleteResult});
+    })
+
 
 
     app.patch('/users/admin/:id', async (req, res) => {
@@ -179,6 +192,20 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await classesCollection.deleteOne(query);
       res.send(result);
+    })
+
+    // create payment intent
+    app.post('/create-payment-intent', verifyJWT, async(req, res) =>{
+      const price = req.body;
+      const amount = price*100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount : amount,
+        currency: 'usd',
+        payment_method_types: ['card']
+      })
+      res.send({
+        clientSecret: paymentIntent.client_secret
+      })
     })
 
 

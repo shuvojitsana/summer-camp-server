@@ -58,12 +58,12 @@ async function run() {
     const paymentsCollection = client.db("summerCamp").collection("payments");
 
     // jwt  verify section
-    // app.post('/jwt', async (req, res) => {
-    //   const user = req.body;
-    //   const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2h' })
+    app.post('/jwt', async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2h' })
 
-    //   res.send({ token })
-    // });
+      res.send({ token })
+    });
 
 
     // warning: verifyJwt

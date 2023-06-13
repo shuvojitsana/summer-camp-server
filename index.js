@@ -112,36 +112,36 @@ async function run() {
 
     //  verify instructor
 
-    app.get('/users/instructor/:email', verifyJWT,  async (req, res) => {
-      const email = req.params.email;
+    // app.get('/users/instructor/:email', verifyJWT,  async (req, res) => {
+    //   const email = req.params.email;
 
-      if (req.decoded.email != email) {
-        res.send({ admin: false });
-      }
-      const query = { email: email };
-      const user = await usersCollection.findOne(query);
-      const result = { instructor: user?.instructorRole === 'instructor' };
-      res.send(result);
-    })
+    //   if (req.decoded.email != email) {
+    //     res.send({ admin: false });
+    //   }
+    //   const query = { email: email };
+    //   const user = await usersCollection.findOne(query);
+    //   const result = { instructor: user?.instructorRole === 'instructor' };
+    //   res.send(result);
+    // // })
 
-    app.patch('/users/instructor/:id', async (req, res) => {
-      const id = req.params.id;
-      const filter = { _id: new ObjectId(id) }
-      const updateDoc = {
-        $set: {
-          instructorRole: 'instructorRole'
-        },
-      }
-      const result = await usersCollection.updateOne(filter, updateDoc);
-      res.send(result);
-    });
+    // app.patch('/users/instructor/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const filter = { _id: new ObjectId(id) }
+    //   const updateDoc = {
+    //     $set: {
+    //       instructorRole: 'instructorRole'
+    //     },
+    //   }
+    //   const result = await usersCollection.updateOne(filter, updateDoc);
+    //   res.send(result);
+    // });
 
-    app.delete('/users/instructor/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) }
-      const result = await usersCollection.deleteOne(query);
-      res.send(result);
-    })
+    // app.delete('/users/instructor/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: new ObjectId(id) }
+    //   const result = await usersCollection.deleteOne(query);
+    //   res.send(result);
+    // })
 
 // admin 
     app.get('/users/admin/:email', verifyJWT,  async (req, res) => {
